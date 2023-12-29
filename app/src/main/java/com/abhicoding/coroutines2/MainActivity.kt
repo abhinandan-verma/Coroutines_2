@@ -7,6 +7,7 @@ import androidx.databinding.DataBindingUtil
 import com.abhicoding.coroutines2.databinding.ActivityMainBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -18,10 +19,15 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this,R.layout.activity_main)
 
         CoroutineScope(Dispatchers.IO).launch {
-            val one = doSomething1()
-            val two = doSomething2()
+            Log.v("TAG","The App has Started ✅")
+            val one = async {
+                doSomething1()
+            }
+            val two = async {
+                doSomething2()
+            }
 
-            val result = one + two
+            val result = one.await() + two.await()
             Log.v("TAG","The result is $result")
         }
 
@@ -34,7 +40,7 @@ class MainActivity : AppCompatActivity() {
     }
     private suspend fun doSomething2(): Int{
         delay(7000)
-        Log.v("TAG","fun1 is Done")
+        Log.v("TAG","fun2 is Done")
         return 8
 
     }
